@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Recipe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .success-message {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #e1e1e1;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .current-image {
+            margin-top: 10px;
+        }
+
+        .current-image img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .current-image p {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'index' %}" class="back-btn">← Back to Recipes</a>
+        <h1>✏️ Update Recipe</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="success-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="recipe_name">Recipe Name</label>
+                <input type="text" id="recipe_name" name="recipe_name" placeholder="Enter recipe name" value="{{ recipe.recipe_name }}">
+            </div>
+
+            <div class="form-group">
+                <label for="ingredient">Ingredients</label>
+                <textarea id="ingredient" name="ingredient" placeholder="Enter ingredients">{{ recipe.ingredient }}</textarea>
+
+            </div>
+
+            <div class="form-group">
+                <label for="recipe_description">Description</label>
+                <textarea id="recipe_description" name="recipe_description" placeholder="Enter recipe description">{{ recipe.description }}</textarea>
+
+            </div>
+
+            <div class="form-group">
+                <label for="recipe_image">Recipe Image</label>
+                {% if recipe.recipe_image %}
+                    <div class="current-image">
+                        <img src="{{ recipe.recipe_image.url }}" alt="{{ recipe.recipe_name }}">
+                        <p>Current image (upload new to replace)</p>
+                    </div>
+                {% endif %}
+                <input type="file" id="recipe_image" name="recipe_image" accept="image/*">
+
+            </div>
+
+            <button type="submit" class="submit-btn">Update Recipe</button>
+
+        </form>
+    </div>
+</body>
+</html>

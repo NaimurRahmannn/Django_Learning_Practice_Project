@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe Book</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .success-message {
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #e1e1e1;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Table Styles */
+        .recipes-section {
+            margin-top: 40px;
+        }
+
+        .recipes-section h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .recipes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipes-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .recipes-table th,
+        .recipes-table td {
+            padding: 15px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .recipes-table th {
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .recipes-table td {
+            font-size: 14px;
+            color: #555;
+            vertical-align: middle;
+        }
+
+        .recipes-table tbody tr:hover {
+            background-color: #f8f9ff;
+        }
+
+        .recipes-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .recipe-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-image {
+            width: 60px;
+            height: 60px;
+            background-color: #e1e1e1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .no-recipes {
+            text-align: center;
+            padding: 30px;
+            color: #888;
+            font-style: italic;
+        }
+
+        .description-cell {
+            max-width: 200px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .delete-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(238, 90, 90, 0.4);
+            background: linear-gradient(135deg, #ff5252 0%, #d63031 100%);
+        }
+
+        .delete-btn:active {
+            transform: translateY(0);
+        }
+
+        .update-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .update-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+            background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+        }
+
+        .update-btn:active {
+            transform: translateY(0);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(238, 90, 90, 0.4);
+            background: linear-gradient(135deg, #ff5252 0%, #d63031 100%);
+            color: white;
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <h1>🍳 Recipe Book</h1>
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="logout-btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Login</a>
+            {% endif %}
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="success-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="recipe_name">Recipe Name</label>
+                <input type="text" id="recipe_name" name="recipe_name" placeholder="Enter recipe name">
+                {% if errors.recipe_name %}
+                    <p class="error-message">{{ errors.recipe_name }}</p>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="ingredient">Ingredients</label>
+                <textarea id="ingredient" name="ingredient" placeholder="Enter ingredients"></textarea>
+                {% if errors.ingredient %}
+                    <p class="error-message">{{ errors.ingredient }}</p>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="recipe_description">Description</label>
+                <textarea id="recipe_description" name="recipe_description" placeholder="Enter recipe description"></textarea>
+                {% if errors.description %}
+                    <p class="error-message">{{ errors.description }}</p>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="recipe_image">Recipe Image</label>
+                <input type="file" id="recipe_image" name="recipe_image" accept="image/*">
+                {% if errors.recipe_image %}
+                    <p class="error-message">{{ errors.recipe_image }}</p>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="submit-btn">Add Recipe</button>
+
+        </form>
+
+        <!-- Recipes Table Section -->
+        <div class="recipes-section">
+            <h2>📖 All Recipes</h2>
+            {% if queryset %}
+                <table class="recipes-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Image</th>
+                            <th>Recipe Name</th>
+                            <th>Ingredients</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recipe in queryset %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                {% if recipe.recipe_image %}
+                                    <img src="{{ recipe.recipe_image.url }}" alt="{{ recipe.recipe_name }}" class="recipe-image">
+                                {% else %}
+                                    <div class="no-image">No Image</div>
+                                {% endif %}
+                            </td>
+                            <td>{{ recipe.recipe_name }}</td>
+                            <td class="description-cell">{{ recipe.ingredient }}</td>
+                            <td class="description-cell">{{ recipe.description }}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{% url 'delete_recipe' recipe.id %}" class="delete-btn">Delete</a>
+                                    <a href="{% url 'update' recipe.id %}" class="update-btn">Update</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="no-recipes">No recipes added yet. Be the first to add one!</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
